@@ -6,6 +6,7 @@ variable "instance_type" {
 variable "instance_types" {
   type = map(string)
   default = {
-    "example" = "t2.micro"
+    "example"        = "t2.micro"
+    "other_instance" = "t4g.micro"
   }
 }
