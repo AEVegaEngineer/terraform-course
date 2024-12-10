@@ -10,28 +10,29 @@ resource "aws_instance" "web" {
   vpc_security_group_ids = [aws_security_group.allow_ssh.id, aws_security_group.allow_web.id]
   key_name               = aws_key_pair.mykey.key_name
 
-  # user_data = templatefile("${path.module}/templates/web.tpl", {
-  #   "region"     = var.aws_region
-  #   "bucketname" = var.bucket_name
-  # })
+  user_data = templatefile("${path.module}/templates/web.tpl", {
+    # these are variable examples that I can use to pass data to the template
+    "region"     = var.aws_region
+    "bucketname" = var.bucket_name
+  })
 
   user_data_replace_on_change = true
 
-  connection {
-    type = "ssh"
-    user = "ubuntu"
-    host = self.public_ip
-    # here is a downside to using a connection, we need to use the private key
-    private_key = file("~/.ssh/mykey")
-  }
+  # connection {
+  #   type = "ssh"
+  #   user = "ubuntu"
+  #   host = self.public_ip
+  #   # here is a downside to using a connection, we need to use the private key
+  #   private_key = file("~/.ssh/mykey")
+  # }
 
-  #  only use as a last resort
-  provisioner "remote-exec" {
-    inline = [
-      "sudo apt-get update",
-      "sudo apt-get install -y nginx",
-    ]
-  }
+  # #  only use as a last resort
+  # provisioner "remote-exec" {
+  #   inline = [
+  #     "sudo apt-get update",
+  #     "sudo apt-get install -y nginx",
+  #   ]
+  # }
 
   tags = {
     Name = "web"
